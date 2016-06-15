@@ -1,8 +1,8 @@
 compute-master:
     image: ocramz/compute-master-node
     environment:
-     - RUN_SERVER=true
-     - BOOTSTRAP_CONSUL=true
+     - RUN_SERVER='true'
+     - BOOTSTRAP_CONSUL='true'
     ports:
      - "8500:8500"
     container_name: compute-master
