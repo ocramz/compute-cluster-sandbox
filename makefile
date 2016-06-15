@@ -16,6 +16,14 @@ rbuild:
 	curl -H "Content-Type: application/json" --data '{"build": true}' -X POST https://registry.hub.docker.com/u/ocramz/compute-master-node/trigger/72786211-6c20-4dce-9980-b6002d26025d/
 	curl -H "Content-Type: application/json" --data '{"build": true}' -X POST https://registry.hub.docker.com/u/ocramz/compute-ca/trigger/f947b816-b839-4209-8881-50213091812b/
 
+docker-machine-create:
+	docker-machine create -d virtualbox node0
 
-compose:
+
+# create and start
+compose-up:
 	docker-compose up -d
+
+# stop and remove *everything* (containers, netw, images, volumes)
+compose-dn:
+	docker-compose down
