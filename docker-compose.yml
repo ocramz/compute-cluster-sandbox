@@ -9,3 +9,5 @@ compute-master:
     hostname: compute-master
     dns: 127.0.0.1
     privileged: true
+    entrypoint: bin/run-consul.sh
+
