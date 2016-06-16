@@ -1,4 +1,28 @@
+version: '2'
 
+services:
+  # Consul for service discovery, high avail. and key-value pair storage
+  consul:
+    image: progrium/consul
+    command: -server -bootstrap -advertise 10.0.2.15
+    ports:
+    - "8300:8300"
+    - "8400:8400"
+    - "8500:8500"
+    - "8600:53/udp"
+  cert-auth:
+    image: ocramz/compute-ca
+    links:
+      - consul
+  compute-master:
+    image: ocramz/compute-master-node
+    links:
+      - consul
+  compute-node:
+    image: ocramz/compute-node
+    links:
+      - consul
+    
 
 
 
@@ -15,15 +39,3 @@
 #     privileged: true
 #     entrypoint: bin/run-consul.sh
 
-# compute-ca:
-#     image: ocramz/compute-ca
-#     environment:
-#      # - RUN_SERVER='true'
-#      # - BOOTSTRAP_CONSUL='true'
-#     ports:
-#      - "8500:8500"
-#     container_name: compute-ca
-#     hostname: compute-ca
-#     dns: 127.0.0.1
-#     privileged: true
-#     entrypoint: bin/run-consul.sh

@@ -45,12 +45,9 @@ test_overlay_on:
 	eval "$(docker-machine env consul-kvs)"
 	docker run -d -p "8500:8500" -h "consul" progrium/consul -server -bootstrap
 	# create docker swarm master VM
-	docker-machine create -d virtualbox --swarm --swarm-master --swarm-discovery="consul://$(docker-machine ip consul-kvs):8500" --engine-opt="cluster-store=consul://$(docker-machine ip consul-kvs):8500" --engine-opt="cluster-advertise=eth1:2376" 
-node-master
+	docker-machine create -d virtualbox --swarm --swarm-master --swarm-discovery="consul://$(docker-machine ip consul-kvs):8500" --engine-opt="cluster-store=consul://$(docker-machine ip consul-kvs):8500" --engine-opt="cluster-advertise=eth1:2376" node-master
 	# create a node, add it to cluster
-	docker-machine create -d virtualbox --swarm --swarm-discovery="consul://$(docker-machine ip consul-kvs):8500" --engine-opt="cluster-store=consul://$(docker-machine ip consul-kvs):8500" --engine-opt="cluster-advertise=eth1:2376" 
-  node-slave1
-
+	docker-machine create -d virtualbox --swarm --swarm-discovery="consul://$(docker-machine ip consul-kvs):8500" --engine-opt="cluster-store=consul://$(docker-machine ip consul-kvs):8500" --engine-opt="cluster-advertise=eth1:2376" node-slave1
 	# switch to work on Swarm master
 	eval $(docker-machine env --swarm node-master)
 	# visualize swarm info
@@ -60,5 +57,8 @@ node-master
 	docker network create --driver overlay --subnet=10.0.9.0/24 my-net
 
 test_overlay_off:
+	docker-machine rm -y consul-kvs node-master node-slave1
 	docker-machine ls
 	docker network ls
+
+test_overlay: test_overlay_on test_overlay_off
