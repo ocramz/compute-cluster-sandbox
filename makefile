@@ -27,3 +27,38 @@ compose-up:
 # stop and remove *everything* (containers, netw, images, volumes)
 compose-dn:
 	docker-compose down
+
+# # ==== docker-compose and docker swarm integration:
+# $ eval "$(docker-machine env --swarm <name of swarm master machine>)"
+# $ docker-compose up
+
+
+
+
+
+# # test overlay network:
+# # # https://docs.docker.com/engine/userguide/networking/get-started-overlay/
+
+test_overlay_on:
+	# create a VM for Consul key-value store (host) and set up to work with its env.variables
+	docker-machine create -d virtualbox consul-kvs
+	eval "$(docker-machine env consul-kvs)"
+	docker run -d -p "8500:8500" -h "consul" progrium/consul -server -bootstrap
+	# create docker swarm master VM
+	docker-machine create -d virtualbox --swarm --swarm-master --swarm-discovery="consul://$(docker-machine ip consul-kvs):8500" --engine-opt="cluster-store=consul://$(docker-machine ip consul-kvs):8500" --engine-opt="cluster-advertise=eth1:2376" 
+node-master
+	# create a node, add it to cluster
+	docker-machine create -d virtualbox --swarm --swarm-discovery="consul://$(docker-machine ip consul-kvs):8500" --engine-opt="cluster-store=consul://$(docker-machine ip consul-kvs):8500" --engine-opt="cluster-advertise=eth1:2376" 
+  node-slave1
+
+	# switch to work on Swarm master
+	eval $(docker-machine env --swarm node-master)
+	# visualize swarm info
+	docker info
+	# create overlay network
+	# only need to create the network on a single host in the cluster. In this case, you used the Swarm master but you could easily have run it on any host in the cluster.
+	docker network create --driver overlay --subnet=10.0.9.0/24 my-net
+
+test_overlay_off:
+	docker-machine ls
+	docker network ls
