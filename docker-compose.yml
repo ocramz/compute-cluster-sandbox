@@ -4,24 +4,35 @@ services:
   # Consul for service discovery, high avail. and key-value pair storage
   consul:
     image: progrium/consul
-    command: -server -bootstrap -advertise 10.0.2.15
+    command: -server -advertise 10.0.2.15 -bootstrap -ui-dir /ui  #-expect 2
     ports:
-    - "8300:8300"
-    - "8400:8400"
-    - "8500:8500"
-    - "8600:53/udp"
-  cert-auth:
-    image: ocramz/compute-ca
-    links:
-      - consul
-  compute-master:
-    image: ocramz/compute-master-node
-    links:
-      - consul
-  compute-node:
-    image: ocramz/compute-node
-    links:
-      - consul
+    - "10.0.2.15:8300:8300"
+    - "10.0.2.15:8400:8400"
+    - "10.0.2.15:8500:8500"
+    - "10.0.2.15:8600:53/udp"
+    
+  # # backup Consul  
+  # consul2:
+  #   image: progrium/consul
+  #   command: -server -advertise 10.0.2.16 -join 10.0.2.15 
+  #   ports:
+  #   - "10.0.2.16:8300:8300"
+  #   - "10.0.2.16:8400:8400"
+  #   - "10.0.2.16:8500:8500"
+  #   - "10.0.2.16:8600:53/udp"
+    
+  # cert-auth:
+  #   image: ocramz/compute-ca
+  #   links:
+  #     - consul
+  # compute-master:
+  #   image: ocramz/compute-master-node
+  #   links:
+  #     - consul
+  # compute-node:
+  #   image: ocramz/compute-node
+  #   links:
+  #     - consul
     
 
 
