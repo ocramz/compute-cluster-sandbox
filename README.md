@@ -36,6 +36,9 @@ The images inherit from an Ubuntu-based image which contains `supervisord` and `
 
 `compute-kvs` (Key-Value Store) contains Consul which dynamically manages the cluster information (member nodes, DNS information etc.). All networked processes in the cluster should report back to it.
 
+
+## Base image
+
 The base image is `docker-phusion-supervisor` :
 
 * `docker-phusion-supervisor` -> `phusion/baseimage` (https://phusion.github.io/baseimage-docker/)
