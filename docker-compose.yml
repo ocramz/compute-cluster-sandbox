@@ -12,6 +12,9 @@ services:
     - "10.0.2.15:8400:8400"
     - "10.0.2.15:8500:8500"
     - "10.0.2.15:8600:53"
+    networks:
+      mynet:
+        ipv4_address: 10.0.2.15
     
   # # backup Consul  
   # consul2:
@@ -43,6 +46,15 @@ services:
       - kvs
       - compute-master
     
+
+
+networks:
+  mynet:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 10.0.2.0/24
+
 
 
 
