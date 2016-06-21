@@ -25,4 +25,4 @@ before_install:
 script:
   - pwd
   - docker-compose --version
-  # - docker-compose up
+  - docker-compose up
