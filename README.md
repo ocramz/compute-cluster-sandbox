@@ -28,7 +28,7 @@ The arrows indicate dependency:
 
 * `compute-kvs` -> `docker-phusion-supervisor`
 
-The images inherit from a `phusion`-based image, which contains `supervisord` and `consul-template`. These tools allow to manage system processes and rewrite configuration files if/when the cluster changes (the dynamic reconfiguration ideas were stolen from Christian 'qnib' https://www.github.com/qnib . Thanks Christian!).
+The images inherit from an Ubuntu-based image which contains `supervisord` and `consul-template`. These tools allow to manage system processes and rewrite configuration files if/when the cluster changes (the dynamic reconfiguration ideas were stolen from Christian 'qnib' https://www.github.com/ChristianKniep . Thanks Christian!).
 
 `compute-node` contains GCC, GFortran, Python, Perl and a few other build tools.
 
