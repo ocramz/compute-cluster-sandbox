@@ -30,4 +30,4 @@ script:
   - cat /etc/hosts
   - ifconfig
   
-  # - docker-compose up
+  - docker-compose up
