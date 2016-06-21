@@ -2,9 +2,11 @@ version: '2'
 
 services:
   # Consul for service discovery, high avail. and key-value pair storage
-  consul:
-    image: progrium/consul
-    command: -server -advertise 10.0.2.15 -bootstrap -ui-dir /ui  #-expect 2
+  kvs:
+    image: ocramz/compute-kvs
+    container_name: kvs-c
+    hostname: kvs
+    command: -server -advertise 10.0.2.15 -bootstrap #-expect 2
     ports:
     - "10.0.2.15:8300:8300"
     - "10.0.2.15:8400:8400"
@@ -24,15 +26,22 @@ services:
   # cert-auth:
   #   image: ocramz/compute-ca
   #   links:
-  #     - consul
-  # compute-master:
-  #   image: ocramz/compute-master-node
-  #   links:
-  #     - consul
-  # compute-node:
-  #   image: ocramz/compute-node
-  #   links:
-  #     - consul
+  #     - kvs
+  
+  compute-master:
+    image: ocramz/compute-master-node
+    container_name: compute-master-c
+    hostname: compute-master
+    links:
+      - kvs
+      
+  compute-node:
+    image: ocramz/compute-node
+    container_name: compute-node-c
+    # hostname: compute-node
+    links:
+      - kvs
+      - compute-master:compute-master-c
     
 
 
