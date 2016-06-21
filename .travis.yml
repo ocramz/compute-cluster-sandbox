@@ -1,6 +1,6 @@
 sudo: 
-  # required
-  false
+  required
+  # false
 
 language: 
   c 
