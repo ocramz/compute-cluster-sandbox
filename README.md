@@ -41,5 +41,7 @@ The images inherit from an Ubuntu-based image which contains `supervisord` and `
 
 The base image is `docker-phusion-supervisor` :
 
+docker-phusion-supervisor: [![Build Status](https://travis-ci.org/ocramz/docker-phusion-supervisor.svg?branch=master)](https://travis-ci.org/ocramz/docker-phusion-supervisor)
+
 * `docker-phusion-supervisor` -> `phusion/baseimage` (https://phusion.github.io/baseimage-docker/)
 
