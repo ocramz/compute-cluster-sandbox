@@ -25,4 +25,9 @@ before_install:
 script:
   - pwd
   - docker-compose --version
-  - docker-compose up
+
+  # # check network env
+  - cat /etc/hosts
+  - ifconfig
+  
+  # - docker-compose up
