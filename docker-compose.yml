@@ -26,7 +26,7 @@ services:
   # cert-auth:
   #   image: ocramz/compute-ca
   #   links:
-  #     - kvs:kvs-c
+  #     - kvs
   
   compute-master:
     image: ocramz/compute-master-node
@@ -40,8 +40,8 @@ services:
     container_name: compute-node-c
     # hostname: compute-node
     links:
-      - kvs:kvs-c
-      - compute-master:compute-master-c
+      - kvs
+      - compute-master
     
 
 
