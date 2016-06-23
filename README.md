@@ -1,5 +1,5 @@
 # compute-cluster-sandbox
-A sandbox for experimenting with cluster computing
+Cluster computing in the cloud
 
 Travis CI: [![Build Status](https://travis-ci.org/ocramz/compute-cluster-sandbox.svg?branch=master)](https://travis-ci.org/ocramz/compute-cluster-sandbox)
 
