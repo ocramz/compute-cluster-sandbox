@@ -3,12 +3,16 @@ version: '2'
 services:
   # TLS certificate authority
   ca:
+    environment:
+      NNODES: 3
     image: ocramz/compute-ca
     container_name: ca-c
     hostname: ca
-    networks:
-      mynet:
-        ipv4_address: 10.0.2.3
+    volumes:
+      - /.tls
+    # networks:
+    #   mynet:
+    #     ipv4_address: 10.0.2.3
   
   # Consul for service discovery, high avail. and key-value pair storage
   kvs:
@@ -16,14 +20,14 @@ services:
     container_name: kvs-c
     hostname: kvs
     command: -server -advertise 10.0.2.2 -bootstrap #-expect 2
-    ports:
-    - "10.0.2.2:8300:8300"
-    - "10.0.2.2:8400:8400"
-    - "10.0.2.2:8500:8500"
-    - "10.0.2.2:8600:53"
-    networks:
-      mynet:
-        ipv4_address: 10.0.2.2
+  #   ports:
+  #   - "10.0.2.2:8300:8300"
+  #   - "10.0.2.2:8400:8400"
+  #   - "10.0.2.2:8500:8500"
+  #   - "10.0.2.2:8600:53"
+    # networks:
+    #   mynet:
+    #     ipv4_address: 10.0.2.2
     
   # # backup Consul  
   # consul2:
@@ -46,9 +50,9 @@ services:
     hostname: compute-master
     links:
       - kvs
-    networks:
-      mynet:
-        ipv4_address: 10.0.2.1  
+    # networks:
+    #   mynet:
+    #     ipv4_address: 10.0.2.1  
       
   compute-node:
     image: ocramz/compute-node
@@ -60,12 +64,12 @@ services:
     
 
 
-networks:
-  mynet:
-    driver: bridge
-    ipam:
-      config:
-      - subnet: 10.0.2.0/24
+# networks:
+#   mynet:
+#     driver: bridge # overlay
+#     ipam:
+#       config:
+#       - subnet: 10.0.2.0/24
 
 
 
