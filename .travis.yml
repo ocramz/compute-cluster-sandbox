@@ -31,3 +31,5 @@ script:
   - ifconfig
   
   - docker-compose up
+  - sleep 30
+  - docker-compose down
