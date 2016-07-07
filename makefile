@@ -8,7 +8,7 @@ help:
 	@echo "Use \`make <target>\` where <target> is one of"
 	@echo "  help     display this help message"
 	@echo "  rbuild   build remotely (on Docker hub)"
-	@echo "  compose      run the docker-compose assembly"
+	@echo "  compose  run the docker-compose assembly"
 
 
 rbuild:

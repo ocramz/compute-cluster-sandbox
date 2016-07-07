@@ -1,6 +1,15 @@
 version: '2'
 
 services:
+  # TLS certificate authority
+  ca:
+    image: ocramz/compute-ca
+    container_name: ca-c
+    hostname: ca
+    networks:
+      mynet:
+        ipv4_address: 10.0.2.3
+  
   # Consul for service discovery, high avail. and key-value pair storage
   kvs:
     image: ocramz/compute-kvs
