@@ -30,6 +30,7 @@ script:
   - cat /etc/hosts
   - ifconfig
   
-  - docker-compose up &> log &
-  - sleep 30
+  - docker-compose up &> logfile &
+  - sleep 10
   - docker-compose down
+  - cat logfile
