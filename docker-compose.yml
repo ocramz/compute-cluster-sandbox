@@ -12,7 +12,7 @@ services:
       - /.tls
     # networks:
     #   mynet:
-    #     ipv4_address: 10.0.2.3
+    #     ipv4_address: 10.0.2.15
   
   # Consul for service discovery, high avail. and key-value pair storage
   kvs:
@@ -27,7 +27,7 @@ services:
   #   - "10.0.2.2:8600:53"
     # networks:
     #   mynet:
-    #     ipv4_address: 10.0.2.2
+    #     ipv4_address: 10.0.2.0
     
   # # backup Consul  
   # consul2:
@@ -66,7 +66,7 @@ services:
 
 # networks:
 #   mynet:
-#     driver: bridge # overlay
+#     driver: overlay
 #     ipam:
 #       config:
 #       - subnet: 10.0.2.0/24
