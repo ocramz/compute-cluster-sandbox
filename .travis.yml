@@ -31,6 +31,6 @@ script:
   - ifconfig
   
   - docker-compose up &> logfile &
-  - sleep 10
+  - sleep 60
   - docker-compose down
   - cat logfile
