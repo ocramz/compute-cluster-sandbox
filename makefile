@@ -35,7 +35,7 @@ ca_create_certs:
 
 
 cluster_provision:
-	docker-compose scale master=1 node=${NNODES}
+	docker-compose scale master=1 node="${NNODES}"
 
 cluster_shutdown:
 	docker-compose down
