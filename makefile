@@ -18,10 +18,13 @@ rbuild:
 	curl -H "Content-Type: application/json" --data '{"build": true}' -X POST https://registry.hub.docker.com/u/ocramz/compute-ca/trigger/f947b816-b839-4209-8881-50213091812b/
 
 
+ca_run0:
+	docker run --rm -it ocramz/compute-ca /bin/bash
+
 
 ca_create_certs:
 	# mkdir tls_certs
-	docker run --rm -it -v ${PWD}/tls_certs:/.tls/certs ocramz/compute-ca /bin/bash -c ./generate-certs.sh ${NNODES}
+	docker run --rm -i -v ${PWD}/tls_certs:/.tls/certs ocramz/compute-ca /bin/bash ./generate-certs.sh ${NNODES}
 	ls -lsA tls_certs
 
 
