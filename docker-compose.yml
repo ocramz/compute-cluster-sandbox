@@ -1,89 +1,9 @@
-version: '2'
+master:
+  image: ocramz/compute-master-node
+  ports:
+    - "22"
+  links:
+    - node
 
-services:
-  # TLS certificate authority
-  ca:
-    environment:
-      NNODES: 3
-    image: ocramz/compute-ca
-    container_name: ca-c
-    hostname: ca
-    volumes:
-      - /.tls
-    # networks:
-    #   mynet:
-    #     ipv4_address: 10.0.2.15
-  
-  # Consul for service discovery, high avail. and key-value pair storage
-  kvs:
-    image: ocramz/compute-kvs
-    container_name: kvs-c
-    hostname: kvs
-    command: -server -advertise 10.0.2.2 -bootstrap #-expect 2
-  #   ports:
-  #   - "10.0.2.2:8300:8300"
-  #   - "10.0.2.2:8400:8400"
-  #   - "10.0.2.2:8500:8500"
-  #   - "10.0.2.2:8600:53"
-    # networks:
-    #   mynet:
-    #     ipv4_address: 10.0.2.0
-    
-  # # backup Consul  
-  # consul2:
-  #   image: progrium/consul
-  #   command: -server -advertise 10.0.2.16 -join 10.0.2.15 
-  #   ports:
-  #   - "10.0.2.16:8300:8300"
-  #   - "10.0.2.16:8400:8400"
-  #   - "10.0.2.16:8500:8500"
-  #   - "10.0.2.16:8600:53/udp"
-    
-  # cert-auth:
-  #   image: ocramz/compute-ca
-  #   links:
-  #     - kvs
-  
-  compute-master:
-    image: ocramz/compute-master-node
-    container_name: compute-master-c
-    hostname: compute-master
-    links:
-      - kvs
-    # networks:
-    #   mynet:
-    #     ipv4_address: 10.0.2.1  
-      
-  compute-node:
-    image: ocramz/compute-node
-    container_name: compute-node-c
-    # hostname: compute-node
-    links:
-      - kvs
-      - compute-master
-    
-
-
-# networks:
-#   mynet:
-#     driver: overlay
-#     ipam:
-#       config:
-#       - subnet: 10.0.2.0/24
-
-
-
-
-# compute-master:
-#     image: ocramz/compute-master-node
-#     environment:
-#      - RUN_SERVER='true'
-#      - BOOTSTRAP_CONSUL='true'
-#     ports:
-#      - "8500:8500"
-#     container_name: compute-master
-#     hostname: compute-master
-#     dns: 127.0.0.1
-#     privileged: true
-#     entrypoint: bin/run-consul.sh
-
+node:
+  image: ocramz/compute-node

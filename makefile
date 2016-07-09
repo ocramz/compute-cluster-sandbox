@@ -28,7 +28,11 @@ ca_create_certs:
 	ls -lsA tls_certs
 
 
+cluster_provision:
+	docker-compose scale master=1 node=${NNODES}
 
+cluster_shutdown:
+	docker-compose down
 
 
 
