@@ -38,7 +38,7 @@ test_all:
 	make cluster_shutdown
 
 ca_create_certs:
-	mkdir tls_certs
+	mkdir -p ${PWD}/tls_certs
 	docker run --rm -i -v ${PWD}/tls_certs:/.tls/certs ocramz/compute-ca /bin/bash ./generate-certs.sh ${NNODES}
 	ls -lsA tls_certs
 
