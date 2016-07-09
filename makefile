@@ -30,17 +30,21 @@ node_run0:
 
 
 test_all:
-	make ca_create_certs
+	# make ca_create_certs
 	make cluster_provision
-	for ii in `seq 1 $$NNODES`; do \
-	    docker cp ${PWD}/tls_certs/node$$ii-cert.pem computeclustersandbox_node_$$ii:/home/mpirun/.ssh/ ; \
-	  done
+	# make ca_copy_certs
 	make cluster_shutdown
 
 ca_create_certs:
 	mkdir -p ${PWD}/tls_certs
+	ls -lsA
 	docker run --rm -i -v ${PWD}/tls_certs:/.tls/certs ocramz/compute-ca /bin/bash ./generate-certs.sh ${NNODES}
 	ls -lsA tls_certs
+
+ca_copy_certs:
+	for ii in `seq 1 $$NNODES`; do \
+	    docker cp ${PWD}/tls_certs/node$$ii-cert.pem computeclustersandbox_node_$$ii:/home/mpirun/.ssh/ ; \
+	done
 
 
 cluster_provision:
