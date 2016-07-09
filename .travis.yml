@@ -13,6 +13,8 @@ services:
 #    packages:
 #    - gfortran
 
+env:
+  NNODES 3
 
 before_install:
   # # update Docker
@@ -26,13 +28,15 @@ script:
   - pwd
   - docker-compose --version
 
-  # # check network env
-  - cat /etc/hosts
-  - ifconfig
+  - make NNODES=${NNODES} ca_create_certs
   
-  - docker-compose up &> logfile &
-  - sleep 60
-  - docker network ls
-  # # shut down docker-compose
-  - docker-compose down
-  - cat logfile
+  # # # check network env
+  # - cat /etc/hosts
+  # - ifconfig
+  
+  # - docker-compose up &> logfile &
+  # - sleep 60
+  # - docker network ls
+  # # # shut down docker-compose
+  # - docker-compose down
+  # - cat logfile
