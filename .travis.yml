@@ -28,11 +28,7 @@ script:
   - pwd
   - docker-compose --version
 
-  - make NNODES=${NNODES} ca_create_certs
-
-  - make cluster_provision
-
-  - make cluster_shutdown
+  - make NNODES=${NNODES} test_all
   
   # # # check network env
   # - cat /etc/hosts
