@@ -8,6 +8,7 @@ help:
 	@echo "Use \`make <target>\` where <target> is one of"
 	@echo "  help     display this help message"
 	@echo "  rbuild   build remotely (on Docker hub)"
+	@echo "  test_all gen TLS certs and test compose cluster"
 
 export NNODES=4
 
@@ -21,6 +22,11 @@ rbuild:
 ca_run0:
 	docker run --rm -it ocramz/compute-ca /bin/bash
 
+
+test_all:
+	make ca_create_certs
+	make cluster_provision
+	make cluster_shutdown
 
 ca_create_certs:
 	# mkdir tls_certs
