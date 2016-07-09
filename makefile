@@ -26,7 +26,7 @@ ca_run0:
 test_all:
 	make ca_create_certs
 	make cluster_provision
-	for ii in `seq 1 $NNODES`; do \
+	for ii in `seq 1 $$NNODES`; do \
 	    docker cp ${PWD}/tls_certs/node$ii-cert.pem computeclustersandbox_node_$ii:/home/mpirun/.ssh/ ; \
 	  done
 	make cluster_shutdown
