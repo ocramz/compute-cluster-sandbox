@@ -9,6 +9,15 @@
 # PETSC_ARCH="$PETSC_ARCH"
 # SLEPC_ARCH="$SLEPC_ARCH"
 
+echo "== ENVIRONMENT :"
+printenv
+
+echo "=== ls -lsA"
+ls -lsA
+
+echo "=== pwd"
+pwd
+
 
 # retrieve latest source
 echo "=== git clone petsc-hs"
