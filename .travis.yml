@@ -14,7 +14,7 @@ services:
 #    - gfortran
 
 env:
-  NNODES=3
+  NNODES=2
 
 before_install:
   # # update Docker
