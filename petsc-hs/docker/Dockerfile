@@ -39,13 +39,10 @@ RUN apt-get update && \
     # apt-get -qq install -y --no-install-recommends ca-certificates debian-keyring debian-archive-keyring && \
     # apt-key update && \
     # apt-get -qq update && \
-    apt-get -qq install -y --no-install-recommends make bzip2 unzip wget curl \
-                                                   openssh-server && \
-                                                   # libmunge-dev libmunge2 munge \
-						   # slurm-llnl && \
-						   apt-get clean && \
-						   apt-get purge && \
-						   rm -rf /var/lib/apt/lists/*
+    apt-get -qq install -y --no-install-recommends \
+          make bzip2 unzip wget curl openssh-server \
+        # libmunge-dev libmunge2 munge slurm-llnl \
+ && apt-get clean && apt-get purge && rm -rf /var/lib/apt/lists/*
 
 # ------------------------------------------------------------
 # SSH
@@ -57,6 +54,10 @@ RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/ss
 # SSH login fix. Otherwise user is kicked out after login
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
+
+RUN pwd
+RUN ls -lsA
+RUN printenv
 
 
 # # # COPY SSH KEYS :
