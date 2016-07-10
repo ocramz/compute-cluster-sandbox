@@ -32,6 +32,7 @@ script:
   - docker-compose scale master=1 node="${NNODES}"
 
   - docker-compose exec --privileged master stack setup
+  - docker-compose exec --privileged node stack setup
   
   - docker-compose exec --privileged master /src/update-petsc-hs.sh
   
