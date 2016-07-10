@@ -111,7 +111,7 @@ WORKDIR $SRC_DIR
 RUN rm -rf petsc-hs/
 
 # # copy update script (NB: hardcoded dir `/src`)
-ADD update-petsc-hs.sh /src/
+ADD update-petsc-hs-0.sh ${SRC_DIR}
 
 # # <===== NB : starting point to fetch and build `petsc-hs` from the github repo
 
@@ -151,7 +151,7 @@ RUN chmod -R 600 ${SSHDIR}* && \
 
 
 
-# # $SRC_DIR == /src (was defined in petsc-hs-docker Dockerfile)
+# # parent dir of petsc-hs
 WORKDIR $SRC_DIR
 
 
