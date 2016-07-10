@@ -21,12 +21,11 @@ ENV MPIHOME=/home/${MPIUSER} \
 RUN printenv | grep PETSC && \
     printenv | grep SLEPC
 
-# # Set up environment variables
+# # environment variables
 # # NB : assumes SLEPC_ARCH is defined
 ENV LOCAL_DIR=${HOME}/.local \
     BIN_DIR=${HOME}/.local/bin \
     SRC_DIR=${HOME}/src \
-    PETSCHS_DIR=${SRC_DIR}/petsc-hs \
     PETSC_INCLUDE1=${PETSC_DIR}/include/ \
     PETSC_INCLUDE2=${PETSC_DIR}/${PETSC_ARCH}/include/ \
     PETSC_LIB=${PETSC_DIR}/${PETSC_ARCH}/lib/ \
@@ -61,7 +60,10 @@ WORKDIR $BIN_DIR
 
 RUN curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C $BIN_DIR '*/stack'
 
-ENV PATH=${BIN_DIR}:${PATH}
+# # environment variables (derived)
+ENV PATH=${BIN_DIR}:${PATH} \
+    PETSCHS_DIR=${SRC_DIR}/petsc-hs
+    
 RUN ls -lsA ${BIN_DIR} 
 
 
