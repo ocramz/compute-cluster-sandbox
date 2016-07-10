@@ -10,14 +10,15 @@ RUN adduser --disabled-password --gecos "" ${MPIUSER} && \
     echo "${MPIUSER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 
-ENV MPIHOME /home/${MPIUSER}
+ENV MPIHOME=/home/${MPIUSER} \
+    SSHDIR=${MPIHOME}/.ssh
 
 
 # # augment PATH
 ENV PATH $BIN_DIR:$PATH
 
 # # # Create directories
-RUN mkdir -p ${MPIHOME}/.ssh && \
+RUN mkdir -p ${SSHDIR} && \
     mkdir -p ${MPIHOME}/bin && \
     mkdir -p ${MPIHOME}/example
 
