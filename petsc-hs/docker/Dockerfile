@@ -20,21 +20,18 @@ RUN printenv | grep PETSC && \
     printenv | grep SLEPC
 
 # # Set up environment variables
+# # NB : assumes SLEPC_ARCH is defined
 ENV LOCAL_DIR=${HOME}/.local \
     BIN_DIR=${HOME}/.local/bin \
     SRC_DIR=${HOME}/src \
     PETSCHS_DIR=${SRC_DIR}/petsc-hs \
-    PATH=${BIN_DIR}:${PATH} 
-
-ENV PETSC_INCLUDE1=${PETSC_DIR}/include/ \
+    PATH=${BIN_DIR}:${PATH} \
+    PETSC_INCLUDE1=${PETSC_DIR}/include/ \
     PETSC_INCLUDE2=${PETSC_DIR}/${PETSC_ARCH}/include/ \
-    PETSC_LIB=${PETSC_DIR}/${PETSC_ARCH}/lib/
-
-# # NB : assumes SLEPC_ARCH is defined
-ENV SLEPC_INCLUDE1=${SLEPC_DIR}/include/ \
+    PETSC_LIB=${PETSC_DIR}/${PETSC_ARCH}/lib/ \
+    SLEPC_INCLUDE1=${SLEPC_DIR}/include/ \
     SLEPC_INCLUDE2=${SLEPC_DIR}/$SLEPC_ARCH/include/ \
     SLEPC_LIB=${SLEPC_DIR}/${SLEPC_ARCH}/lib/
-
 
 # # # Create directories
 RUN mkdir -p $LOCAL_DIR && \
