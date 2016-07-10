@@ -4,7 +4,6 @@ FROM ocramz/petsc-docker
 # ------------------------------------------------------------
 # Add an 'mpirun' user
 # ------------------------------------------------------------
-
 ENV MPIUSER=mpirun
 
 RUN adduser --disabled-password --gecos "" ${MPIUSER} && \
@@ -17,16 +16,15 @@ ENV MPIHOME=/home/${MPIUSER} \
 # ------------------------------------------------------------
 # Env. variables and directories
 # ------------------------------------------------------------
-
 RUN printenv | grep PETSC
 RUN printenv | grep SLEPC
 
 # # Set up environment variables
-ENV LOCAL_DIR=$HOME/.local \
-    BIN_DIR=$HOME/.local/bin \
-    SRC_DIR=$HOME/src \
-    PETSCHS_DIR=$SRC_DIR/petsc-hs \
-    PATH=$BIN_DIR:$PATH \
+ENV LOCAL_DIR=${HOME}/.local \
+    BIN_DIR=${HOME}/.local/bin \
+    SRC_DIR=${HOME}/src \
+    PETSCHS_DIR=${SRC_DIR}/petsc-hs \
+    PATH=${BIN_DIR}:${PATH} \
 
 ENV PETSC_INCLUDE1=${PETSC_DIR}/include/ \
     PETSC_INCLUDE2=${PETSC_DIR}/${PETSC_ARCH}/include/ \
@@ -37,9 +35,6 @@ ENV SLEPC_INCLUDE1=${SLEPC_DIR}/include/ \
     SLEPC_INCLUDE2=${SLEPC_DIR}/$SLEPC_ARCH/include/ \
     SLEPC_LIB=${SLEPC_DIR}/${SLEPC_ARCH}/lib/
 
-
-# # augment PATH
-ENV PATH=$BIN_DIR:$PATH
 
 # # # Create directories
 RUN mkdir -p $LOCAL_DIR && \
