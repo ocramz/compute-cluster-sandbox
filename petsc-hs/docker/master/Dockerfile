@@ -28,7 +28,7 @@ RUN mkdir -p $BIN_DIR && \
     mkdir -p $SRC_DIR && \
     mkdir -p $TMP && \
     mkdir -p $ETC && \
-    mkdir -p $SSHDIR && \
+        mkdir -p $SSHDIR && \
     mkdir -p $HOME/bin && \
     mkdir -p ${EXAMPLE}
 
@@ -43,7 +43,7 @@ RUN apt-get update && \
                                                    openssh-server \
                                                    # libmunge-dev libmunge2 munge \
 						   # slurm-llnl && \
-						   rm -rf /var/lib/apt/lists/*
+						   && rm -rf /var/lib/apt/lists/*
 
 # ------------------------------------------------------------
 # SSH

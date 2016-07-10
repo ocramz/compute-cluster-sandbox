@@ -43,7 +43,7 @@ RUN apt-get update && \
                                                    openssh-server \
                                                    # libmunge-dev libmunge2 munge \
 						   # slurm-llnl && \
-						   rm -rf /var/lib/apt/lists/*
+						   && rm -rf /var/lib/apt/lists/*
 
 # ------------------------------------------------------------
 # SSH
