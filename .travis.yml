@@ -31,7 +31,7 @@ script:
   # - make NNODES=${NNODES} cluster_provision
   - docker-compose scale master=1 node="${NNODES}"
 
-  - docker-compose exec --privileged master /update-petsc.sh
+  - docker-compose exec --privileged master /update-petsc-hs.sh
   
   # - docker-compose exec --privileged master mpirun -n 1 python /home/mpirun/mpi4py_benchmarks/all_tests.py
   
