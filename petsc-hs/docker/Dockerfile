@@ -149,8 +149,6 @@ RUN chmod -R 600 ${SSHDIR}* && \
     chown -R ${MPIUSER}:${MPIUSER} ${SSHDIR}
 
 
-
-
 # # parent dir of petsc-hs
 WORKDIR $SRC_DIR
 

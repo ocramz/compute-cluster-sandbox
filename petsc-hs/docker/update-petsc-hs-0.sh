@@ -1,16 +1,10 @@
 #!/bin/bash
 
 # # NB : PETSc/SLEPc environment variables must be already set at this stage
-# printenv | grep PETSC ..
-
-# STACK_ARGS="$STACK_ARGS"
-# PETSC_DIR="$PETSC_DIR"
-# SLEPC_DIR="$SLEPC_DIR"
-# PETSC_ARCH="$PETSC_ARCH"
-# SLEPC_ARCH="$SLEPC_ARCH"
 
 echo "== ENVIRONMENT :"
-printenv
+printenv | grep PETSC
+printenv | grep SLEPC
 
 echo "=== ls -lsA"
 ls -lsA
@@ -25,13 +19,6 @@ git clone https://github.com/ocramz/petsc-hs.git
 
 echo "=== cd petsc-hs"
 cd petsc-hs
-
-
-# echo "=== stack setup"
-# stack setup
-
-# echo "=== stack install c2hs"
-# stack install c2hs
 
 
 # generate and interpret c2hs script (architecture-dependent types)
