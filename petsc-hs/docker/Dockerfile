@@ -5,7 +5,7 @@ FROM ocramz/petsc-docker
 # Add an 'mpirun' user
 # ------------------------------------------------------------
 
-ENV MPIUSER mpirun
+ENV MPIUSER=mpirun
 
 RUN adduser --disabled-password --gecos "" ${MPIUSER} && \
     echo "${MPIUSER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
@@ -32,7 +32,6 @@ ENV PETSC_INCLUDE1=${PETSC_DIR}/include/ \
     PETSC_INCLUDE2=${PETSC_DIR}/${PETSC_ARCH}/include/ \
     PETSC_LIB=${PETSC_DIR}/${PETSC_ARCH}/lib/
 
-
 # # NB : assumes SLEPC_ARCH is defined
 ENV SLEPC_INCLUDE1=${SLEPC_DIR}/include/ \
     SLEPC_INCLUDE2=${SLEPC_DIR}/$SLEPC_ARCH/include/ \
@@ -40,7 +39,7 @@ ENV SLEPC_INCLUDE1=${SLEPC_DIR}/include/ \
 
 
 # # augment PATH
-ENV PATH $BIN_DIR:$PATH
+ENV PATH=$BIN_DIR:$PATH
 
 # # # Create directories
 RUN mkdir -p $LOCAL_DIR && \
@@ -73,7 +72,7 @@ RUN curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --s
 # # Add `stack` path
 
 RUN export STACK_PATH_1=$(stack --stack-yaml stack.yaml path --local-install-root)
-ENV PATH STACK_PATH_1:$PATH
+ENV PATH=${STACK_PATH_1}:${PATH}
 
 RUN export DIST_DIR_1=$(stack path --dist-dir)/build
 
