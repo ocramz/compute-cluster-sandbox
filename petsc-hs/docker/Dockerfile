@@ -60,13 +60,7 @@ WORKDIR $BIN_DIR
 
 RUN curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C $BIN_DIR '*/stack'
 
-# expand Stack-related path variables
-RUN export STACK_PATH_1=$(stack --stack-yaml stack.yaml path --local-install-root) && \
-    export DIST_DIR_1=$(stack path --dist-dir)/build
 
-# # Add `stack` path
-ENV PATH=${PETSC_DIR}/${PETSC_ARCH}/bin/:$PATH \
-    PATH=${STACK_PATH_1}:${PATH}
  
 
 
@@ -81,13 +75,23 @@ RUN git clone https://github.com/ocramz/petsc-hs.git
 WORKDIR $PETSCHS_DIR
 
 # # setup + first build of petsc-hs
-RUN stack setup 
-RUN ./stack-build.sh "--dependencies-only" "$PETSC_DIR" "$PETSC_ARCH" "$SLEPC_DIR" "$SLEPC_ARCH"
+RUN stack setup
+
+# expand Stack-related path variables
+RUN export STACK_PATH_1=$(stack --stack-yaml stack.yaml path --local-install-root) && \
+    export DIST_DIR_1=$(stack path --dist-dir)/build
+
+ENV PATH=${PETSC_DIR}/${PETSC_ARCH}/bin/:$PATH \
+    PATH=${STACK_PATH_1}:${PATH}
 
 
+# ------------------------------------------------------------
+# petsc-hs : install c2hs and build dependencies
+# ------------------------------------------------------------
 # # install c2hs
 RUN stack install c2hs
 
+RUN ./stack-build.sh "--dependencies-only" "$PETSC_DIR" "$PETSC_ARCH" "$SLEPC_DIR" "$SLEPC_ARCH"
 
 # ------------------------------------------------------------
 # petsc-hs : delete PETSc-hs sources and build artifacts (dependencies are compiled in /.stack/ and safe)
