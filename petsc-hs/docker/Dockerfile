@@ -36,14 +36,16 @@ RUN mkdir -p $BIN_DIR && \
 
 # # update TLS-related stuff and install dependencies
 RUN apt-get update && \
-    apt-get -qq install -y --no-install-recommends ca-certificates debian-keyring debian-archive-keyring && \
-    apt-key update && \
-    apt-get -qq update && \
+    # apt-get -qq install -y --no-install-recommends ca-certificates debian-keyring debian-archive-keyring && \
+    # apt-key update && \
+    # apt-get -qq update && \
     apt-get -qq install -y --no-install-recommends make bzip2 unzip wget curl \
                                                    openssh-server \
                                                    # libmunge-dev libmunge2 munge \
 						   # slurm-llnl && \
-						   && rm -rf /var/lib/apt/lists/*
+						   apt-get clean && \
+						   apt-get purge && \
+						   rm -rf /var/lib/apt/lists/*
 
 # ------------------------------------------------------------
 # SSH
@@ -68,11 +70,21 @@ ADD ssh/id_rsa.mpi.pub ${SSHDIR}/authorized_keys
 # # # 
 
 
-
-
-
 RUN chmod -R 600 ${SSHDIR}* && \
     chown -R ${USER}:${USER} ${SSHDIR}
+
+
+
+
+# # $HOME at this point == /home/mpirun
+WORKDIR $HOME
+
+# # petsc-hs will be a subdir of $HOME
+ADD update-petsc-hs-0.sh ${HOME}
+
+
+
+
 
 
 EXPOSE 22
@@ -83,4 +95,3 @@ EXPOSE 22
 
 RUN chown -R root ${HOME}
 
-WORKDIR $HOME

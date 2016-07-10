@@ -1,6 +1,6 @@
 master:
   # image: ocramz/compute-master-node
-  build: ./petsc-hs/docker/master/
+  build: ./petsc-hs/docker/
   ports:
     - "22"
   links:
@@ -8,4 +8,4 @@ master:
 
 node:
   # image: ocramz/compute-node
-  build: ./petsc-hs/docker/node/
+  build: ./petsc-hs/docker/
