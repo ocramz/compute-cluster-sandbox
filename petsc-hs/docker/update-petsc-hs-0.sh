@@ -17,6 +17,11 @@ git clone https://github.com/ocramz/petsc-hs.git
 echo "=== cd petsc-hs"
 cd petsc-hs
 
+
+# echo "=== stack setup"
+# stack setup
+
+
 # generate and interpret c2hs script (architecture-dependent types)
 echo "=== ./c2hs-build.sh"
 ./c2hs-build.sh ${PETSC_DIR} ${PETSC_ARCH} ${SLEPC_DIR} ${SLEPC_ARCH} ${PWD}/src/Numerical/PETSc/Internal/C2HsGen

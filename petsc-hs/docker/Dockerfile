@@ -14,7 +14,6 @@ ENV HOME /home/${USER}
 
 # # # environment variables misc.
 ENV BIN_DIR=${HOME}/bin \
-    SRC_DIR=${HOME}/src \
     TMP=${HOME}/tmp \
     SSHDIR=${HOME}/.ssh \
     ETC=${HOME}/etc \
@@ -25,7 +24,6 @@ ENV PATH $BIN_DIR:$PATH
 
 # # # Create directories
 RUN mkdir -p $BIN_DIR && \
-    mkdir -p $SRC_DIR && \
     mkdir -p $TMP && \
     mkdir -p $ETC && \
     mkdir -p $SSHDIR && \
@@ -77,10 +75,9 @@ RUN chmod -R 600 ${SSHDIR}* && \
 
 
 
-# # $HOME at this point == /home/mpirun
-WORKDIR $HOME
+# # $SRC_DIR == /src (was defined in petsc-hs-docker Dockerfile)
+WORKDIR $SRC_DIR
 
-# # petsc-hs will be a subdir of $HOME
 ADD update-petsc-hs-0.sh ${SRC_DIR}/update-petsc-hs-0.sh
 
 
