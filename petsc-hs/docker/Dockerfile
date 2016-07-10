@@ -6,8 +6,8 @@ ENV MPIUSER mpirun
 # Add an 'mpirun' user
 # ------------------------------------------------------------
 
-RUN adduser --disabled-password --gecos "" ${USER} && \
-    echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+RUN adduser --disabled-password --gecos "" ${MPIUSER} && \
+    echo "${MPIUSER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 
 ENV MPIHOME /home/${MPIUSER}
@@ -37,7 +37,7 @@ RUN apt-get update && \
 # SSH
 # ------------------------------------------------------------
 
-RUN echo 'root:${USER}' | chpasswd
+RUN echo 'root:${MPIUSER}' | chpasswd
 RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 # SSH login fix. Otherwise user is kicked out after login
@@ -61,7 +61,7 @@ ADD ssh/id_rsa.mpi.pub ${SSHDIR}/authorized_keys
 
 
 RUN chmod -R 600 ${SSHDIR}* && \
-    chown -R ${USER}:${USER} ${SSHDIR}
+    chown -R ${MPIUSER}:${MPIUSER} ${SSHDIR}
 
 
 
