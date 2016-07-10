@@ -71,7 +71,7 @@ ENV PATH=${STACK_PATH_1}:${PATH}
 
 RUN export DIST_DIR_1=$(stack path --dist-dir)/build
 
-ENV PATH ${PETSC_DIR}/${PETSC_ARCH}/bin/:$PATH
+ENV PATH=${PETSC_DIR}/${PETSC_ARCH}/bin/:$PATH
 
 
 
