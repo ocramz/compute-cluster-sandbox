@@ -18,8 +18,8 @@ ENV MPIHOME=/home/${MPIUSER} \
 # ------------------------------------------------------------
 # Env. variables and directories
 # ------------------------------------------------------------
-RUN printenv | grep PETSC && \
-    printenv | grep SLEPC
+# RUN printenv | grep PETSC && \
+#     printenv | grep SLEPC
 
 # # environment variables
 # # NB : assumes SLEPC_ARCH is defined
@@ -64,14 +64,15 @@ RUN curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --s
 ENV PATH=${BIN_DIR}:${PATH} \
     PETSCHS_DIR=${SRC_DIR}/petsc-hs
     
-RUN ls -lsA ${BIN_DIR} 
+# RUN ls -lsA ${BIN_DIR} 
 
 
 
 # ------------------------------------------------------------
 # SHOW ENVIRONMENT VARIABLES
 # ------------------------------------------------------------
-RUN printenv
+
+# RUN printenv
 
 # ------------------------------------------------------------
 # petsc-hs : clone repository and `stack setup`
@@ -92,6 +93,8 @@ RUN export STACK_PATH_1=$(stack --stack-yaml stack.yaml path --local-install-roo
 
 ENV PATH=${PETSC_DIR}/${PETSC_ARCH}/bin/:$PATH \
     PATH=${STACK_PATH_1}:${PATH}
+
+
 
 
 # ------------------------------------------------------------
@@ -129,9 +132,6 @@ RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/ss
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
 
-RUN pwd
-RUN ls -lsA
-RUN printenv
 
 
 # # # COPY SSH KEYS :
@@ -155,14 +155,10 @@ WORKDIR $SRC_DIR
 
 
 
-
-
-
-
 EXPOSE 22
 
 # # use the default cmd from petsc-hs-docker
-# CMD ["/usr/sbin/sshd", "-D"]
+CMD ["/usr/sbin/sshd", "-D"]
 
 
 RUN chown -R root ${MPIHOME}
