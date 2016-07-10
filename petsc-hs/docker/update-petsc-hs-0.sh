@@ -30,6 +30,9 @@ cd petsc-hs
 echo "=== stack setup"
 stack setup
 
+echo "=== stack install c2hs"
+stack install c2hs
+
 
 # generate and interpret c2hs script (architecture-dependent types)
 echo "=== ./c2hs-build.sh"
