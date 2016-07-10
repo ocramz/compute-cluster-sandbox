@@ -1,6 +1,6 @@
 FROM ocramz/petsc-hs-docker
 
-ENV USER mpirun
+ENV MPIUSER mpirun
 
 # ------------------------------------------------------------
 # Add an 'mpirun' user
@@ -10,25 +10,16 @@ RUN adduser --disabled-password --gecos "" ${USER} && \
     echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 
-ENV HOME /home/${USER}
+ENV MPIHOME /home/${MPIUSER}
 
-# # # environment variables misc.
-ENV BIN_DIR=${HOME}/bin \
-    TMP=${HOME}/tmp \
-    SSHDIR=${HOME}/.ssh \
-    ETC=${HOME}/etc \
-    EXAMPLE=${HOME}/example
 
 # # augment PATH
 ENV PATH $BIN_DIR:$PATH
 
 # # # Create directories
-RUN mkdir -p $BIN_DIR && \
-    mkdir -p $TMP && \
-    mkdir -p $ETC && \
-    mkdir -p $SSHDIR && \
-    mkdir -p $HOME/bin && \
-    mkdir -p ${EXAMPLE}
+RUN mkdir -p ${MPIHOME}/.ssh
+    mkdir -p ${MPIHOME}/bin && \
+    mkdir -p ${MPIHOME}/example
 
 
 
