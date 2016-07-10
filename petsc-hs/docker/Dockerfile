@@ -1,4 +1,4 @@
-FROM ocramz/petsc-docker
+FROM ocramz/petsc-docker:petsc-3.7.2
 # # here we-reinstall petsc-hs following petsc-hs-docker
 
 # ------------------------------------------------------------
