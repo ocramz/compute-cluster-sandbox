@@ -17,7 +17,7 @@ ENV MPIHOME /home/${MPIUSER}
 ENV PATH $BIN_DIR:$PATH
 
 # # # Create directories
-RUN mkdir -p ${MPIHOME}/.ssh
+RUN mkdir -p ${MPIHOME}/.ssh && \
     mkdir -p ${MPIHOME}/bin && \
     mkdir -p ${MPIHOME}/example
 
