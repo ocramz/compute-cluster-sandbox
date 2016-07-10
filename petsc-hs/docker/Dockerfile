@@ -40,7 +40,7 @@ RUN apt-get update && \
     # apt-key update && \
     # apt-get -qq update && \
     apt-get -qq install -y --no-install-recommends make bzip2 unzip wget curl \
-                                                   openssh-server \
+                                                   openssh-server && \
                                                    # libmunge-dev libmunge2 munge \
 						   # slurm-llnl && \
 						   apt-get clean && \
