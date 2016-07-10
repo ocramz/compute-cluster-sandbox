@@ -33,7 +33,7 @@ script:
 
   - docker-compose exec --privileged master /update-petsc-hs.sh
   
-  # - docker-compose exec --privileged master mpirun -n 1 python /home/mpirun/mpi4py_benchmarks/all_tests.py
+  - docker-compose exec --privileged master mpirun -n ${NNODES} stack exec petsc-example
   
   # - make cluster_shutdown
   - docker-compose down
