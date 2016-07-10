@@ -83,5 +83,5 @@ EXPOSE 22
 # CMD ["/usr/sbin/sshd", "-D"]
 
 
-RUN chown -R root ${HOME}
+RUN chown -R root ${MPIHOME}
 
