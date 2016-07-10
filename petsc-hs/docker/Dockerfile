@@ -100,8 +100,10 @@ RUN export STACK_PATH_1=$(stack --stack-yaml stack.yaml path --local-install-roo
     export DIST_DIR_1=$(stack path --dist-dir)/build
 
 ENV PATH=${PETSC_DIR}/${PETSC_ARCH}/bin/:$PATH \
-    PATH=${STACK_PATH_1}:${PATH}
+    PATH=${STACK_PATH_1}:${PATH} \
+    MPIRUN_PATH=${PETSC_DIR}/${PETSC_ARCH}/bin
 
+ENV PATH=${MPIRUN_PATH}:${PATH}
 
 
 
