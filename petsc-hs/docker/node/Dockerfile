@@ -1,199 +1,83 @@
-FROM ocramz/compute-node
+FROM ocramz/petsc-hs-docker
 
-# PETSc and SLEPc versions
+ENV USER mpirun
 
-ENV PETSC_VERSION 3.7.2
-ENV SLEPC_VERSION 3.7.1
+# ------------------------------------------------------------
+# Add an 'mpirun' user
+# ------------------------------------------------------------
 
-# # env. variables
-
-ENV PETSC_DIR /opt/petsc-$PETSC_VERSION
-ENV SLEPC_DIR /opt/slepc-$SLEPC_VERSION
-ENV PETSC_ARCH arch-linux2-c-debug
-ENV SLEPC_ARCH arch-linux2-c-debug
+RUN adduser --disabled-password --gecos "" ${USER} && \
+    echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 
-# # # Update APT and install dependencies and tools
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y make \
-                       gcc gfortran wget curl python pkg-config build-essential \
-		       make gcc git libgmp-dev wget curl xz-utils \
-                       valgrind \
-		       openssh-client 
+ENV HOME /home/${USER}
 
+# # # environment variables misc.
+ENV BIN_DIR=${HOME}/bin \
+    SRC_DIR=${HOME}/src \
+    TMP=${HOME}/tmp \
+    SSHDIR=${HOME}/.ssh \
+    ETC=${HOME}/etc \
+    EXAMPLE=${HOME}/example
 
-# # Download and extract PETSc.
-WORKDIR /opt
-RUN wget --no-verbose http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-lite-$PETSC_VERSION.tar.gz && \
-    gunzip -c petsc-lite-$PETSC_VERSION.tar.gz | tar -xof -
-
-WORKDIR $PETSC_DIR
-
-# # # Configure and build PETSc 
-
-RUN echo "\n=== Configuring without batch mode\n"
-
-RUN ./configure --with-cc=gcc --with-cxx=g++ --with-fc=gfortran --download-fblaslapack --download-mpich &&\
-    make all && \
-    make test
-
-
-
-
-# # # Download and extract SLEPc.
-WORKDIR /opt
-RUN wget --no-verbose http://www.grycap.upv.es/slepc/download/distrib/slepc-$SLEPC_VERSION.tar.gz
-RUN gunzip -c slepc-$SLEPC_VERSION.tar.gz | tar -xof -
-
-
-
-WORKDIR $SLEPC_DIR
-
-
-
-# # # Configure and build SLEPc.
-RUN ./configure && \
-    make all && \
-    make test
-
-# # remove .tar.gz
-WORKDIR /opt
-RUN rm *.tar.gz
-
-
-
-# # Add the newly compiled libraries to the environment.
-ENV LD_LIBRARY_PATH $PETSC_DIR/$PETSC_ARCH/lib:$SLEPC_DIR/$PETSC_ARCH/lib
-ENV PKG_CONFIG_PATH $PETSC_DIR/$PETSC_ARCH/lib/pkgconfig:$SLEPC_DIR/$PETSC_ARCH/lib/pkgconfig
-
-
-
-# # # clean temp data
-RUN sudo apt-get clean && \
-    apt-get purge && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-
-VOLUME $PETSC_DIR
-
-WORKDIR /home
-
-
-
-# # Update APT
-RUN apt-get update -yq --fix-missing && apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends ca-certificates && \
-    apt-key update
-
-
-# # Set up environment variables
-ENV LOCAL_DIR $HOME/.local
-ENV BIN_DIR $HOME/.local/bin
-ENV SRC_DIR $HOME/src
-ENV PETSCHS_DIR $SRC_DIR/petsc-hs
-
-
+# # augment PATH
 ENV PATH $BIN_DIR:$PATH
 
-ENV PETSC_INCLUDE1 $PETSC_DIR/include/
-ENV PETSC_INCLUDE2 $PETSC_DIR/$PETSC_ARCH/include/
-ENV PETSC_LIB $PETSC_DIR/$PETSC_ARCH/lib/
-
-
-# # NB : assumes SLEPC_ARCH is defined
-ENV SLEPC_INCLUDE1 $SLEPC_DIR/include/
-ENV SLEPC_INCLUDE2 $SLEPC_DIR/$SLEPC_ARCH/include/
-ENV SLEPC_LIB $SLEPC_DIR/$SLEPC_ARCH/lib/
-
-
-# # Create directories
-RUN mkdir -p $LOCAL_DIR
-RUN mkdir -p $BIN_DIR
-RUN mkdir -p $SRC_DIR
-
-# # print PETSc/SLEPc env variables to stdout:
-RUN echo $PETSC_DIR 
-RUN echo $PETSC_ARCH 
-RUN echo $SLEPC_DIR 
-RUN echo $SLEPC_ARCH 
-RUN echo $PETSC_LIB 
-RUN echo $SLEPC_LIB 
-RUN echo $LD_LIBRARY_PATH 
-RUN echo $PKG_CONFIG_PATH
-RUN printenv | grep bin
+# # # Create directories
+RUN mkdir -p $BIN_DIR && \
+    mkdir -p $SRC_DIR && \
+    mkdir -p $TMP && \
+    mkdir -p $ETC && \
+    mkdir -p $SSHDIR && \
+    mkdir -p $HOME/bin && \
+    mkdir -p ${EXAMPLE}
 
 
 
+# # update TLS-related stuff and install dependencies
+RUN apt-get update && \
+    apt-get -qq install -y --no-install-recommends ca-certificates debian-keyring debian-archive-keyring && \
+    apt-key update && \
+    apt-get -qq update && \
+    apt-get -qq install -y --no-install-recommends make bzip2 unzip wget curl \
+                                                   openssh-server \
+                                                   libmunge-dev libmunge2 munge \
+						   slurm-llnl && \
+						   rm -rf /var/lib/apt/lists/*
 
-# # Get `stack`
-WORKDIR $BIN_DIR
+# ------------------------------------------------------------
+# SSH
+# ------------------------------------------------------------
 
-RUN curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C $BIN_DIR '*/stack'
+RUN echo 'root:${USER}' | chpasswd
+RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
-# # Add `stack` path
-ENV PATH $(stack --stack-yaml stack.yaml path --local-install-root):$PATH
-
-ENV DIST_DIR $(stack path --dist-dir)/build
-
-ENV PATH $PETSC_DIR/$PETSC_ARCH/bin/:$PATH
-
-
-
-
-
-
-
-
-
-WORKDIR $SRC_DIR
+# SSH login fix. Otherwise user is kicked out after login
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
 
-# # retrieve petsc-hs repository
-RUN git clone https://github.com/ocramz/petsc-hs.git
 
-WORKDIR $PETSCHS_DIR
+# # # COPY SSH KEYS :
+ADD ssh/config ${SSHDIR}/config
 
-# # setup + first build of petsc-hs
-RUN stack setup 
-RUN ./stack-build.sh "--dependencies-only" "$PETSC_DIR" "$PETSC_ARCH" "$SLEPC_DIR" "$SLEPC_ARCH"
+# # # template:
+ADD ssh/id_rsa.mpi ${SSHDIR}/id_rsa
+ADD ssh/id_rsa.mpi.pub ${SSHDIR}/id_rsa.pub
+ADD ssh/id_rsa.mpi.pub ${SSHDIR}/authorized_keys
 
-
-# # install c2hs
-RUN stack install c2hs
-
-# # # where is runhaskell?
-# RUN find ${HOME} -name runhaskell
+# # # 
 
 
 
 
 
+RUN chmod -R 600 ${SSHDIR}* && \
+    chown -R ${USER}:${USER} ${SSHDIR}
 
 
+EXPOSE 22
 
-WORKDIR $SRC_DIR
+# # use the default cmd from petsc-hs-docker
+# CMD ["/usr/sbin/sshd", "-D"]
 
-# # delete PETSc-hs sources and build artifacts (dependencies are compiled in /.stack/ and safe)
-RUN rm -rf petsc-hs/
-
-# # copy update script (NB: hardcoded dir `/src`)
-ADD update-petsc-hs.sh /src/
-
-# # <===== NB : starting point to fetch and build `petsc-hs` from the github repo
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# # # clean temp data
-RUN sudo apt-get clean && apt-get purge && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+WORKDIR $HOME
