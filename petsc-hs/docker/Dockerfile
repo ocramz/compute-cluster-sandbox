@@ -49,9 +49,8 @@ RUN mkdir -p $LOCAL_DIR && \
 # ------------------------------------------------------------
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends ca-certificates && \
     apt-key update && \
-    apt-get -qq install -y --no-install-recommends \
+    apt-get -qq install -y --no-install-recommends ca-certificates \
           make bzip2 unzip gcc git libgmp-dev wget curl xz-utils openssh-server \
         # libmunge-dev libmunge2 munge slurm-llnl \
  && apt-get clean && apt-get purge && rm -rf /var/lib/apt/lists/*
