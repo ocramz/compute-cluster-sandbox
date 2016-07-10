@@ -24,7 +24,7 @@ ENV LOCAL_DIR=${HOME}/.local \
     BIN_DIR=${HOME}/.local/bin \
     SRC_DIR=${HOME}/src \
     PETSCHS_DIR=${SRC_DIR}/petsc-hs \
-    PATH=${BIN_DIR}:${PATH} \
+    PATH=${BIN_DIR}:${PATH} 
 
 ENV PETSC_INCLUDE1=${PETSC_DIR}/include/ \
     PETSC_INCLUDE2=${PETSC_DIR}/${PETSC_ARCH}/include/ \
