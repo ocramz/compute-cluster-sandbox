@@ -79,6 +79,43 @@ RUN export DIST_DIR_1=$(stack path --dist-dir)/build
 
 ENV PATH ${PETSC_DIR}/${PETSC_ARCH}/bin/:$PATH
 
+
+
+# ------------------------------------------------------------
+# petsc-hs : clone repository and `stack setup`
+# ------------------------------------------------------------
+WORKDIR $SRC_DIR
+
+# # retrieve petsc-hs repository
+RUN git clone https://github.com/ocramz/petsc-hs.git
+
+WORKDIR $PETSCHS_DIR
+
+# # setup + first build of petsc-hs
+RUN stack setup 
+RUN ./stack-build.sh "--dependencies-only" "$PETSC_DIR" "$PETSC_ARCH" "$SLEPC_DIR" "$SLEPC_ARCH"
+
+
+# # install c2hs
+RUN stack install c2hs
+
+
+# ------------------------------------------------------------
+# petsc-hs : delete PETSc-hs sources and build artifacts (dependencies are compiled in /.stack/ and safe)
+# ------------------------------------------------------------
+WORKDIR $SRC_DIR
+
+# # delete PETSc-hs sources and build artifacts (dependencies are compiled in /.stack/ and safe)
+RUN rm -rf petsc-hs/
+
+# # copy update script (NB: hardcoded dir `/src`)
+ADD update-petsc-hs.sh /src/
+
+# # <===== NB : starting point to fetch and build `petsc-hs` from the github repo
+
+
+
+
 # ------------------------------------------------------------
 # SSH
 # ------------------------------------------------------------
@@ -115,7 +152,7 @@ RUN chmod -R 600 ${SSHDIR}* && \
 # # $SRC_DIR == /src (was defined in petsc-hs-docker Dockerfile)
 WORKDIR $SRC_DIR
 
-ADD update-petsc-hs-0.sh ${SRC_DIR}/update-petsc-hs-0.sh
+
 
 
 
