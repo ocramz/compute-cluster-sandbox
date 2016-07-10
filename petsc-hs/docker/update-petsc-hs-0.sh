@@ -27,8 +27,8 @@ echo "=== cd petsc-hs"
 cd petsc-hs
 
 
-# echo "=== stack setup"
-# stack setup
+echo "=== stack setup"
+stack setup
 
 
 # generate and interpret c2hs script (architecture-dependent types)
