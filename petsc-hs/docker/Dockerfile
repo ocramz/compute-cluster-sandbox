@@ -16,8 +16,8 @@ ENV MPIHOME=/home/${MPIUSER} \
 # ------------------------------------------------------------
 # Env. variables and directories
 # ------------------------------------------------------------
-RUN printenv | grep PETSC
-RUN printenv | grep SLEPC
+RUN printenv | grep PETSC && \
+    printenv | grep SLEPC
 
 # # Set up environment variables
 ENV LOCAL_DIR=${HOME}/.local \
