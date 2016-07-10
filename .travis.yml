@@ -34,7 +34,7 @@ script:
   # - docker-compose exec --privileged master stack setup
   # - docker-compose exec --privileged node stack setup
   
-  - docker-compose exec --privileged master /src/update-petsc-hs-0.sh
+  - docker-compose exec --privileged master /home/mpirun/src/update-petsc-hs-0.sh
   
   - docker-compose exec --privileged master mpirun -n ${NNODES} stack exec petsc-example
   
