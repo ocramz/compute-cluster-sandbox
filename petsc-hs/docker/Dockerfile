@@ -80,7 +80,7 @@ RUN chmod -R 600 ${SSHDIR}* && \
 WORKDIR $HOME
 
 # # petsc-hs will be a subdir of $HOME
-ADD update-petsc-hs-0.sh ${HOME}
+ADD update-petsc-hs-0.sh ${SRC_DIR}/update-petsc-hs-0.sh
 
 
 
