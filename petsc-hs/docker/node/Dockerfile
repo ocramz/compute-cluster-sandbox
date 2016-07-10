@@ -41,8 +41,8 @@ RUN apt-get update && \
     apt-get -qq update && \
     apt-get -qq install -y --no-install-recommends make bzip2 unzip wget curl \
                                                    openssh-server \
-                                                   libmunge-dev libmunge2 munge \
-						   slurm-llnl && \
+                                                   # libmunge-dev libmunge2 munge \
+						   # slurm-llnl && \
 						   rm -rf /var/lib/apt/lists/*
 
 # ------------------------------------------------------------
@@ -79,5 +79,8 @@ EXPOSE 22
 
 # # use the default cmd from petsc-hs-docker
 # CMD ["/usr/sbin/sshd", "-D"]
+
+
+RUN chown -R root ${HOME}
 
 WORKDIR $HOME
