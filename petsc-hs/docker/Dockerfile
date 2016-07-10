@@ -1,38 +1,83 @@
-FROM ocramz/petsc-hs-docker
-
-ENV MPIUSER mpirun
+FROM ocramz/petsc-docker
+# # here we-reinstall petsc-hs following petsc-hs-docker
 
 # ------------------------------------------------------------
 # Add an 'mpirun' user
 # ------------------------------------------------------------
 
+ENV MPIUSER mpirun
+
 RUN adduser --disabled-password --gecos "" ${MPIUSER} && \
     echo "${MPIUSER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-
 ENV MPIHOME=/home/${MPIUSER} \
     SSHDIR=${MPIHOME}/.ssh
+
+
+# ------------------------------------------------------------
+# Env. variables and directories
+# ------------------------------------------------------------
+
+RUN printenv | grep PETSC
+RUN printenv | grep SLEPC
+
+# # Set up environment variables
+ENV LOCAL_DIR=$HOME/.local \
+    BIN_DIR=$HOME/.local/bin \
+    SRC_DIR=$HOME/src \
+    PETSCHS_DIR=$SRC_DIR/petsc-hs \
+    PATH=$BIN_DIR:$PATH \
+
+ENV PETSC_INCLUDE1=${PETSC_DIR}/include/ \
+    PETSC_INCLUDE2=${PETSC_DIR}/${PETSC_ARCH}/include/ \
+    PETSC_LIB=${PETSC_DIR}/${PETSC_ARCH}/lib/
+
+
+# # NB : assumes SLEPC_ARCH is defined
+ENV SLEPC_INCLUDE1=${SLEPC_DIR}/include/ \
+    SLEPC_INCLUDE2=${SLEPC_DIR}/$SLEPC_ARCH/include/ \
+    SLEPC_LIB=${SLEPC_DIR}/${SLEPC_ARCH}/lib/
 
 
 # # augment PATH
 ENV PATH $BIN_DIR:$PATH
 
 # # # Create directories
-RUN mkdir -p ${SSHDIR} && \
+RUN mkdir -p $LOCAL_DIR && \
+    mkdir -p $BIN_DIR && \
+    mkdir -p $SRC_DIR && \
+    mkdir -p ${SSHDIR} && \
     mkdir -p ${MPIHOME}/bin && \
     mkdir -p ${MPIHOME}/example
 
+# ------------------------------------------------------------
+# APT-Install dependencies and tools
+# ------------------------------------------------------------
 
-
-# # update TLS-related stuff and install dependencies
 RUN apt-get update && \
-    # apt-get -qq install -y --no-install-recommends ca-certificates debian-keyring debian-archive-keyring && \
-    # apt-key update && \
-    # apt-get -qq update && \
+    apt-get install -y --no-install-recommends ca-certificates && \
+    apt-key update && \
     apt-get -qq install -y --no-install-recommends \
-          make bzip2 unzip wget curl openssh-server \
+          make bzip2 unzip gcc git libgmp-dev wget curl xz-utils openssh-server \
         # libmunge-dev libmunge2 munge slurm-llnl \
  && apt-get clean && apt-get purge && rm -rf /var/lib/apt/lists/*
+
+
+# ------------------------------------------------------------
+# Get the Haskell `stack` build tool
+# ------------------------------------------------------------
+WORKDIR $BIN_DIR
+
+RUN curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C $BIN_DIR '*/stack'
+
+# # Add `stack` path
+
+RUN export STACK_PATH_1=$(stack --stack-yaml stack.yaml path --local-install-root)
+ENV PATH STACK_PATH_1:$PATH
+
+RUN export DIST_DIR_1=$(stack path --dist-dir)/build
+
+ENV PATH ${PETSC_DIR}/${PETSC_ARCH}/bin/:$PATH
 
 # ------------------------------------------------------------
 # SSH
